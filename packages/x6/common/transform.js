@@ -109,7 +109,7 @@ export function getEllipseNode(node) {
     // const { type, label, x, y, width, height, id, actionType, data } = getBaseConfig(node)
     const {label, x, y, id, actionType, data } = getBaseConfig(node)
 
-    console.log("getNode: label: ", label);
+    // console.log("getNode: label: ", label);
 
     // 主题色
     const targetTheme = getActionTypeTheme(actionType)
@@ -414,13 +414,13 @@ function getNodeJSON(nodes) {
  * 按照指定的 JSON 数据渲染节点和边。
  */
 export function fromJSON(graph, nodes, edges) {
-    console.log("fromJSON: nodes1: ", nodes)
+    // console.log("fromJSON: nodes1: ", nodes)
     if (!Lang.isArray(nodes) || !Lang.isArray(edges)) {
         console.log("fromJSON: if: ", "进来了")  //没进来
         Channel.dispatchEvent(CustomEventTypeEnum.RUNTIME_ERR, ErrorClass.InvalidParameters('节点或者边数据格式不正确'))
         throw new ErrorClass.InvalidParameters('节点或者边数据格式不正确')
     }
-    console.log("fromJSON: nodes2: ", nodes)
+    // console.log("fromJSON: nodes2: ", nodes)
     graph.fromJSON({
         nodes: getNodeJSON(nodes),
         edges: fmtJSON(edges)

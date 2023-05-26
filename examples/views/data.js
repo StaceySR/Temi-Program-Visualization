@@ -1,24 +1,18 @@
 export const nodes1 = [
     {
-        "attrs": {
-            "label": { "text": "Trigger" }
-        },
+        "attrs": {"label": { "text": "Trigger" }},
         "id": "0",
-        "data": { "actionType": "TRIGGER", "initialization": false, "tooltip": "Trigger" },
+        "data": { "actionType": "TRIGGER" }, //代表这个node的形状，TRIGGER是圆形；CONDITION是菱形；ACTION是矩形
     },
     {
-        "attrs": {
-            "label": { "text": "Condition" }
-        },
+        "attrs": {"label": { "text": "Condition" }},
         "id": "1",
-        "data": { "actionType": "CONDITION", "initialization": false, "tooltip": "Condition" },
+        "data": { "actionType": "CONDITION" },
     },
     {
-        "attrs": {
-            "label": { "text": "Action" }
-        },
+        "attrs": {"label": { "text": "Action" }},
         "id": "2",
-        "data": { "actionType": "ACTION", "initialization": false, "tooltip": "Action" },
+        "data": { "actionType": "ACTION" },
     }
 ]
 export const edges1 = [
@@ -44,7 +38,32 @@ export const edges1 = [
     }
 ]
 
-
+// export const nodes1 = [
+//     {
+//         "attrs": {
+//             "label": { "text": "Trigger" }
+//         },
+//         "id": "0",
+//         // "data": { "actionType": "TRIGGER", "initialization": false, "tooltip": "Trigger" },
+//         "data": { "actionType": "TRIGGER"},
+//     },
+//     {
+//         "attrs": {
+//             "label": { "text": "Condition" }
+//         },
+//         "id": "1",
+//         // "data": { "actionType": "CONDITION", "initialization": false, "tooltip": "Condition" },
+//         "data": { "actionType": "CONDITION"},
+//     },
+//     {
+//         "attrs": {
+//             "label": { "text": "Action" }
+//         },
+//         "id": "2",
+//         // "data": { "actionType": "ACTION", "initialization": false, "tooltip": "Action" },
+//         "data": { "actionType": "ACTION"},
+//     }
+// ]
 // export const edges1 = [
 //     {
 //         // "shape": "edge",

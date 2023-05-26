@@ -136,7 +136,7 @@ export default defineComponent({
       },
       handleSwitchDefault() {  //[SwitchData]
         const { nodes, edges } = methods.switchData();
-        console.log("defaultData: node: ", nodes);
+        // console.log("defaultData: node: ", nodes);
         graphFunc.initDefaultData(nodes, edges);
       },
       handleClean() {  //[Clear]

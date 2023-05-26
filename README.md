@@ -25,6 +25,7 @@ npm install --save-dev
 npm install --save-dev vue@2.6.11
 ```
 最后打开http://localhost:8080，发现运行成功！
+![antv-x6-vue2](media/autoLayout.gif)
 
 ---
 ---

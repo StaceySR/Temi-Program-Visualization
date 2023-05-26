@@ -42,7 +42,7 @@ export function getGraphJSON() {
 /**初始化画布默认数据 */
 export function setDefaultGraphData(nodes, edges) {
     const graph = useGraph()
-    console.log("setDefaultGraphData: nodes: ", nodes)
+    // console.log("setDefaultGraphData: nodes: ", nodes)
     fromJSON(graph.value, nodes, edges)
 }
 
@@ -69,12 +69,13 @@ export function graphClean() {
 /**自动布局 */
 export function graphAutoLayout(nodes, edges) {
     const graph = useGraph()
-    console.log(graph)
-    console.log("graphAutoLayout: nodes: ", nodes);
+    // console.log(graph)
+    // console.log("graphAutoLayout: nodes: ", nodes);
     const data = {
         nodes: nodes,
         edges: edges,
       }
+    console.log("data: ", data)
     const dagreLayout = new DagreLayout({
         type: 'dagre',
         rankdir: 'TB',
@@ -84,7 +85,7 @@ export function graphAutoLayout(nodes, edges) {
         controlPoints: true,
       })
     const model = dagreLayout.layout(data)
-    console.log(model)
+    // console.log(model)
     fromJSON(graph.value, model.nodes, model.edges)
     // graph.fromJSON(model)
 
@@ -230,7 +231,7 @@ function getBaseEdges() {
     // })
     return edges.map(edge => {
         return {
-            id: edge.id,
+            // id: edge.id,
             source: edge.source,
             target: edge.target
         }
