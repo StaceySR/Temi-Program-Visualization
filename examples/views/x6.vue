@@ -85,7 +85,7 @@ import {
 import { Message } from "element-ui";
 // import G6 from '@antv/g6';
 
-const list = [
+let list = [
   // {
   //   nodes: mockData.nodes2,
   //   edges: mockData.edges2,
@@ -157,33 +157,6 @@ export default defineComponent({
         // const { nodes, edges } = list[data.currentIndex];
         const { nodes, edges } = graphFunc.getAtoms();
         graphFunc.autoLayout(nodes, edges);
-
-        // 获取当前图形实例
-        // const graphInstance = this.$refs.graphContainer.$el.x6Graph;
-        // // this.$refs.graphContainer.$refs.graph;
-
-        // // 将当前图形实例的布局类型设置为'dagre'
-        // graphInstance.setGraphLayout('dagre');
-
-        // // 设置布局配置项
-        // const layoutConfig = {
-        //   rankdir: 'TB',
-        //   align: 'UL',
-        //   nodesep: 30,
-        //   ranksep: 50,
-        // };
-
-        // // 应用布局配置项
-        // graphInstance.setGraphLayoutConfig(layoutConfig);
-
-        // // 执行布局
-        // graphInstance.layout();
-
-        // // 可选：调整画布大小以适应布局后的图形
-        // graphInstance.fitView();
-
-        // // 可选：调用 graphInstance.updateViewport 方法更新画布显示
-        // graphInstance.updateViewport();
       },
 
       listener() {
@@ -200,9 +173,16 @@ export default defineComponent({
           );
         });
       },
+
+      getData(){
+        const {nodes,edges} = graphFunc.getListData();
+        list = [{nodes,edges}];
+        console.log("list：",list);
+      }
     };
 
     onMounted(() => {
+      methods.getData();
       methods.handleSwitchDefault();
       methods.listener();
       methods.handleAutoLayout();

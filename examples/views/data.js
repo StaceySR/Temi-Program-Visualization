@@ -25,6 +25,7 @@ export const edges1 = [
             "cell": "1",
             "port": "p_top"
         },
+        "labels": [{ "attrs": { "label": { "text": "" } } }]
     },
     {
         "source": {
@@ -35,8 +36,11 @@ export const edges1 = [
             "cell": "2",
             "port": "p_top"
         },
+        "labels": [{ "attrs": { "label": { "text": "true" } } }]
     }
 ]
+
+
 
 // export const nodes1 = [
 //     {

@@ -4,6 +4,7 @@ import ErrorClass from "./errorClass";
 import { fromJSON, toJSON } from "./transform";
 import { Channel } from "./transmit";
 import { freezeGraph, unfreezeGraph } from "./trigger";
+import { getMermaidData } from "./mermaid2antV";
 import { useGraph } from "../store";
 import { DagreLayout } from '@antv/layout'
 
@@ -42,7 +43,6 @@ export function getGraphJSON() {
 /**初始化画布默认数据 */
 export function setDefaultGraphData(nodes, edges) {
     const graph = useGraph()
-    // console.log("setDefaultGraphData: nodes: ", nodes)
     fromJSON(graph.value, nodes, edges)
 }
 
@@ -69,26 +69,21 @@ export function graphClean() {
 /**自动布局 */
 export function graphAutoLayout(nodes, edges) {
     const graph = useGraph()
-    // console.log(graph)
-    // console.log("graphAutoLayout: nodes: ", nodes);
     const data = {
         nodes: nodes,
         edges: edges,
       }
-    console.log("data: ", data)
     const dagreLayout = new DagreLayout({
         type: 'dagre',
         rankdir: 'TB',
-        align: 'UL',
-        ranksep: 30,
-        nodesep: 15,
+        align: undefined ,
+        ranksep: 50,
+        nodesep: 100,
         controlPoints: true,
       })
     const model = dagreLayout.layout(data)
-    // console.log(model)
     fromJSON(graph.value, model.nodes, model.edges)
     // graph.fromJSON(model)
-
 }
 
 /**监听单元事件双击回调 */
@@ -230,10 +225,12 @@ function getBaseEdges() {
     //     }
     // })
     return edges.map(edge => {
+        // console.log("getBaseEdges: edge: ", edge.labels);
         return {
             // id: edge.id,
             source: edge.source,
-            target: edge.target
+            target: edge.target,
+            labels: edge.labels,
         }
     })
 }
@@ -256,4 +253,8 @@ export function getAtoms(options) {
             break;
     }
     return atoms
+}
+
+export function getData(){
+    return getMermaidData();
 }

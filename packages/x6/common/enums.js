@@ -76,4 +76,6 @@ export const ActionType = {
     CONDITION: 'CONDITION',
     /**@type {String} 动作 */
     ACTION: 'ACTION',
+    /**@type {String} FOR循环*/
+    FOR: 'FOR',
 }

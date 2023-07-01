@@ -1,6 +1,6 @@
 // G6转X6
 import { Lang } from "@antv/x6"
-import { fmtJSON, fmtLabelOverflow } from ".";
+import { fmtJSON } from ".";
 import { ActionType, CustomEventTypeEnum } from "./enums";
 import ErrorClass from "./errorClass";
 import { Channel } from "./transmit";
@@ -25,7 +25,7 @@ export function getActionTypeTheme(type) {
     // 默认主题色
     const DEFAULE_THEME = Theme.DEFAULT
     if (!type) return DEFAULE_THEME
-    const { TRIGGER, CONDITION, ACTION } = ActionType
+    const { TRIGGER, CONDITION, ACTION, FOR } = ActionType
     return {
         // 触发器
         [TRIGGER]: Theme.GREEN,
@@ -33,6 +33,8 @@ export function getActionTypeTheme(type) {
         [CONDITION]: Theme.GRAY,
         // 执行动作
         [ACTION]: Theme.BLUE,
+        // FOR循环
+        [FOR]: Theme.ORANGE,
     }[type]
 }
 
@@ -83,7 +85,9 @@ function getBaseConfig(node) {
         _tooltip = attrs.label.text
     }
 
-    const cutLabel = fmtLabelOverflow(_tooltip)
+    // const cutLabel = fmtLabelOverflow(_tooltip)
+    const cutLabel = _tooltip;
+
 
     return {
         type: _shape,
@@ -107,7 +111,7 @@ function getBaseConfig(node) {
  */
 export function getEllipseNode(node) {
     // const { type, label, x, y, width, height, id, actionType, data } = getBaseConfig(node)
-    const {label, x, y, id, actionType, data } = getBaseConfig(node)
+    let { label, x, y, id, actionType, data } = getBaseConfig(node)
 
     // console.log("getNode: label: ", label);
 
@@ -115,11 +119,11 @@ export function getEllipseNode(node) {
     const targetTheme = getActionTypeTheme(actionType)
     return {
         id,
-        shape: "ellipse", // 指定使用何种图形，默认值为 'rect'
+        shape: "circle", // 指定使用何种图形，默认值为 'rect'
         width: 50,
         height: 50,
-        x,
-        y,
+        x: x - 25,
+        y: y - 25,
         zIndex: 100,
         data,
         attrs: {
@@ -137,10 +141,28 @@ export function getEllipseNode(node) {
         },
         ports: {
             items: [
-                { group: 'port_g', id: 'p_bottom' },
+                { group: 'port_top', id: 'p_top' },
+                { group: 'port_bottom', id: 'p_bottom' },
+
             ],
             groups: {
-                port_g: {
+                "port_top": {
+                    position: 'top',
+                    zIndex: 20,
+                    attrs: {
+                        circle: {
+                            dataClass: 'choice-point',
+                            r: 6,
+                            magnet: true,
+                            stroke: '#5b8ffa',
+                            strokeWidth: 1,
+                            fill: '#fff'
+                        }
+                    }
+                },
+                "port_bottom": {
+                    position: 'bottom',
+                    zIndex: 20,
                     attrs: {
                         circle: {
                             dataClass: 'choice-point',
@@ -151,7 +173,6 @@ export function getEllipseNode(node) {
                             fill: '#fff'
                         },
                     },
-                    position: 'bottom'
                 }
             }
         },
@@ -166,13 +187,16 @@ export function getRectNode(node) {
     const { type, label, x, y, id, actionType, data } = getBaseConfig(node)
     // 主题色
     const targetTheme = getActionTypeTheme(actionType)
+    const width = 11.5 * label.length;
+    const height = 50;
     return {
         id,
         shape: type, // 指定使用何种图形，默认值为 'rect'
-        width: 50,
-        height: 50,
-        x,
-        y,
+        width,
+        height,
+        x: x - width / 2,
+        y: y - height / 2,
+        // x, y,
         zIndex: 100,
         markup: [
             {
@@ -250,8 +274,8 @@ export function getDiamondNode(node) {
         shape: type, // 指定使用何种图形，默认值为 'rect'
         width: 50,
         height: 50,
-        x,
-        y,
+        x: x - 25,
+        y: y - 25,
         zIndex: 100,
         markup: [
             {
@@ -321,6 +345,83 @@ export function getDiamondNode(node) {
     }
 }
 
+/**
+ * 获取FOR循环节点
+ * @param {*} node 
+ * @returns 
+ */
+export function getForNode(node) {
+    console.log("forNode: ", node);
+    let { type, label, x, y, id, actionType, data } = getBaseConfig(node)
+    // console.log("baseConfig: ", { type, label, x, y, id, actionType, data });
+    // 主题色
+    type = "ellipse";
+    const width = 14 * label.length;
+    const height = 50;
+    const targetTheme = getActionTypeTheme(actionType)
+    return {
+        id,
+        shape: type, // 指定使用何种图形，默认值为 'rect'
+        width,
+        height,
+        x: x - width / 2,
+        y: y - height / 2,
+        zIndex: 100,
+        data,
+        attrs: {
+            label: {
+                text: label,
+                fill: "#7D7671",
+                strokeWidth: 0.4,
+                fontSize: 15,
+            },
+            body: {
+                stroke: targetTheme.border,
+                strokeWidth: 1.5,
+                fill: targetTheme.background,
+            }
+        },
+        ports: {
+            items: [
+                { group: 'port_top', id: 'p_top' },
+                { group: 'port_bottom', id: 'p_bottom' },
+
+            ],
+            groups: {
+                "port_top": {
+                    position: 'top',
+                    zIndex: 20,
+                    attrs: {
+                        circle: {
+                            dataClass: 'choice-point',
+                            // r: 6,
+                            magnet: true,
+                            stroke: '#5b8ffa',
+                            strokeWidth: 1,
+                            fill: '#fff'
+                        }
+                    }
+                },
+                "port_bottom": {
+                    position: 'bottom',
+                    zIndex: 20,
+                    attrs: {
+                        circle: {
+                            dataClass: 'choice-point',
+                            // r: 6,
+                            magnet: true,
+                            stroke: '#5b8ffa',
+                            strokeWidth: 1,
+                            fill: '#fff'
+                        },
+                    },
+                }
+            }
+        },
+    }
+}
+
+
 // 获取Vue节点
 export function getVueNode(node) {
     const { label, width, height, id, data } = getBaseConfig(node)
@@ -382,6 +483,7 @@ function getNodeJSON(nodes) {
             TRIGGER,
             CONDITION,
             ACTION,
+            FOR,
         } = ActionType;
         const actionType = nodeJSON.data.actionType
         if (!actionType) {
@@ -402,6 +504,9 @@ function getNodeJSON(nodes) {
             case ACTION:
                 nodeList.push(getRectNode(nodeJSON))
                 break;
+            case FOR:
+                nodeList.push(getForNode(nodeJSON))
+                break;
             default:
                 break;
         }
@@ -420,7 +525,6 @@ export function fromJSON(graph, nodes, edges) {
         Channel.dispatchEvent(CustomEventTypeEnum.RUNTIME_ERR, ErrorClass.InvalidParameters('节点或者边数据格式不正确'))
         throw new ErrorClass.InvalidParameters('节点或者边数据格式不正确')
     }
-    // console.log("fromJSON: nodes2: ", nodes)
     graph.fromJSON({
         nodes: getNodeJSON(nodes),
         edges: fmtJSON(edges)

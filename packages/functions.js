@@ -1,4 +1,4 @@
-import { getGraphJSON, setDefaultGraphData, disableGraph, nodeDclick, nodeClick, updateNode as commonUpdateNode, validate, getAtoms as getAtomList, runtimeError as catchErr, graphClean, graphAutoLayout } from "./x6/common";
+import { getGraphJSON, setDefaultGraphData, disableGraph, nodeDclick, nodeClick, updateNode as commonUpdateNode, validate, getAtoms as getAtomList, runtimeError as catchErr, graphClean, graphAutoLayout, getData } from "./x6/common";
 /**
  * 获取数据
  * @returns {IExportData}
@@ -80,4 +80,8 @@ export class GraphListener {
     static runtimeError(cb) {
         catchErr(cb);
     }
+
 }
+
+/**get mermaid data from back-end */
+export const getListData = ()=> getData();
