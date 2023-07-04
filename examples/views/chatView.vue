@@ -90,60 +90,7 @@
         });
   
       },
-      // async fetchReply(text) {
-      //   try {
-      //     const response = await fetch("http://localhost:3333/stream", {
-      //       method: "POST",
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //       },
-      //       body: text,
-      //     });
-  
-          
-      //     const reader = response.body.getReader();
-      //     const decoder = new TextDecoder("utf-8");
-      //     let serverResponse = "";
-  
-      //     const processStream = async ({ done, value }) => {
-      //       if (done) {
-      //         return;
-      //       }
-  
-      //       const chunk = decoder.decode(value, { stream: true });
-      //       serverResponse += chunk;
-      //       const lines = serverResponse.split("\n");
-  
-      //       while (lines.length > 1) {
-      //         const line = lines.shift();
-      //         if (line.startsWith("data: ")) {
-      //           const jsonString = line.substring(6);
-      //           if (jsonString.trim() !== "[DONE]") {
-      //             const data = JSON.parse(jsonString);
-      //             const delta = data.choices[0].delta;
-      //             if (delta && delta.content) {
-      //               // Append the new content to the last server message
-      //               const serverMessage = this.messages[this.messages.length - 1];
-      //               if (serverMessage.sender === "server") {
-      //                 serverMessage.text += delta.content;
-      //               } else {
-      //                 this.addMessage(delta.content, "server");
-      //               }
-      //             }
-      //           }
-      //         }
-      //       }
-  
-      //       serverResponse = lines[0];
-      //       return reader.read().then(processStream);
-      //     };
-  
-      //     reader.read().then(processStream);
-      //   } catch (error) {
-      //     console.error("Error fetching reply:", error);
-      //     this.addMessage("Error fetching reply", "server");
-      //   }
-      // },
+
       async fetchConversationReply() {
         try {
           //console.log('historyMsg', this.historyMsg);
