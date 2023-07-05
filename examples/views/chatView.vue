@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="input-container">
-        <textarea ref="textarea" v-model="userInput" />
+        <textarea ref="textarea" v-model="userInput" placeholder="请输入内容"></textarea>
         <button @click="sendMessage">发送</button>
       </div>
     </div>
@@ -25,7 +25,8 @@
         messageCounter: 0,
         systemMsg: "",
         historyMsg: [],
-        currentMsg: ""
+        currentMsg: "",
+        currentJSCode:""
       };
     },
     methods: {
@@ -281,7 +282,7 @@
       this.$refs.textarea.addEventListener("input", this.resizeTextarea);
       this.setSystemMsg();
   
-  
+      this.addMessage("你好，我是你的助手，我将帮助你进行机器人的功能定制，请你开始进行创作吧！", "server");
   
       
     }
