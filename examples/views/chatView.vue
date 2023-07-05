@@ -34,46 +34,40 @@
         if (this.userInput.trim() === "") return;
   
         let sendContent = this.userInput;
-  
-  
-        //取回node-red 当前的flow，并判断是否为空
-        try {
-          const response = await axios.get("http://127.0.0.1:1880/flows");
-          const flows = response.data;
-  
-          // 检查flows是否为空
-          if (flows.length === 0) {
-            console.log('当前flow为空');
-            
-          } else {
-            // 检查是否仅有一个tab节点且没有其他节点
-            if (flows.length === 1 && flows[0].type === 'tab') {
-              console.log('当前flow为空');
-            } else {
-              console.log('当前flow不为空');
-  
-              sendContent = "请按照以下需要对代码进行修改：\n" + this.userInput + "\n" + "代码: \n" + response.data;
-            }
-          }
-        } catch (error) {
-          console.error('获取flows失败：', error.message);
-          return false;
-        }    
-  
-  
-  
-  
-  
-        //const sendContent = "请按照以下需要对代码进行修改：\n" + this.userInput + "\n" + "代码: \n" + response.data;
-  
+        console.log('sendContent', sendContent);
+
         this.addMessage(this.userInput, "user");
         this.addMessage("正在生成中....", "assistant");
-        this.historyMsg.push({
-          role: 'user',
-          content: sendContent
-        });
+
+
+        if(this.currentJSCode.length === 0) {
+          this.currentJSCode = await this.NL2JS(sendContent);
+          //console.log('currentJSCode', this.currentJSCode);
+
+          // 取回生成的hs代码后，进一步生成解释
+          const explainContent = await this.JS2NL(this.currentJSCode);
+          console.log('explainContent', explainContent);
+
+          //将最后的sytem message改成该解释内容
+          // 获得 messages 中最后一条role为system的message
+          const serverMsg = this.messages[this.messages.length - 1];
+          serverMsg.content = explainContent;
+
+        } else {
+            //const modifiedJSCode = await this.NL2JSwithContext(sendContent, this.currentJSCode);
+
+            
+        }
+  
+
+  
+
+        // this.historyMsg.push({
+        //   role: 'user',
+        //   content: sendContent
+        // });
         //this.fetchReply(this.userInput);
-        this.fetchConversationReply();
+        // this.fetchConversationReply();
         this.userInput = "";
   
   
@@ -83,6 +77,70 @@
         }, 100);
   
       },
+
+      async NL2JS(userInput) {
+        const res = await fetch("http://localhost:3001/APIs/nl2js",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text: userInput })
+          }
+        );
+
+        // console.log('res', res.text());
+        // const data = await res.json();
+        // console.log('data', data);
+
+        await res.text().then((data) => {
+          console.log('data', data);
+
+          return data;
+        });
+
+        
+                  
+      },
+
+      async NL2JSwithContext(userInput,currentJSCode) {
+        const res = await fetch("http://localhost:3001/APIs/js2NLexplain" ,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text: userInput,context: currentJSCode })
+          }
+        );
+
+        const data = await res.json();
+        console.log('data', data);
+
+        return data;
+        
+      },
+
+      async JS2NL(jscode) {
+        const res = await fetch("//localhost:3001/APIs/js2NLexplain",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text: jscode})
+          }
+        );
+
+
+        await res.text().then((data) => {
+          console.log('data', data);
+
+          return data;
+        });
+          
+      },
+
       addMessage(content, role) {
         this.messages.push({
           id: this.messageCounter++,
@@ -239,40 +297,41 @@
       } , 
   
       // set system message from  prompt.txt assets file
-      async setSystemMsg() {
-        const fileUrl = 'assets/prompts.txt';
-        fetch(fileUrl)
-          .then(response => response.text())
-          .then(text => {
-            this.systemMsg = text;
-            console.log('systemMsg', this.systemMsg);
+      // async setSystemMsg() {
+      //   const fileUrl = 'assets/prompts.txt';
+      //   fetch(fileUrl)
+      //     .then(response => response.text())
+      //     .then(text => {
+      //       this.systemMsg = text;
+      //       console.log('systemMsg', this.systemMsg);
+
+      //       this.historyMsg.push({
+      //         role: 'system',
+      //         content : this.systemMsg
+      //       });
+      //     }
+      //   )
+      //   .catch(error => {
+      //     console.error('读取文件失败:', error);
+      //   });
+      // },
+      
+      // refreshTargetPage() {
+      //   window.postMessage(
+      //     {
+      //       type: 'MY_CUSTOM_EVENT',
+      //       data: {
+      //         message: 'refresh',
+      //       },
   
-            this.historyMsg.push({
-              role: 'system',
-              content : this.systemMsg
-            });
-          }
-        )
-        .catch(error => {
-          console.error('读取文件失败:', error);
-        });
-      },
-      refreshTargetPage() {
-        window.postMessage(
-          {
-            type: 'MY_CUSTOM_EVENT',
-            data: {
-              message: 'refresh',
-            },
-  
-          }, '*'
-  
-  
-        );
+      //     }, '*'
   
   
-        console.log('refreshTargetPage');
-      }
+      //   );
+  
+  
+      //   console.log('refreshTargetPage');
+      // }
       
       
   
@@ -280,9 +339,9 @@
     },
     mounted() {
       this.$refs.textarea.addEventListener("input", this.resizeTextarea);
-      this.setSystemMsg();
+      //this.setSystemMsg();
   
-      this.addMessage("你好，我是你的助手，我将帮助你进行机器人的功能定制，请你开始进行创作吧！", "server");
+      this.addMessage("你好，我是你的助手，我将帮助你进行机器人的功能定制，请你开始进行创作吧！", "assistant");
   
       
     }
